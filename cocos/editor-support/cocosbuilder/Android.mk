@@ -5,7 +5,9 @@ LOCAL_MODULE := cocosbuilder_static
 
 LOCAL_MODULE_FILENAME := libcocosbuilder
 
-LOCAL_SRC_FILES := CCBAnimationManager.cpp \
+LOCAL_SRC_FILES :=
+ifeq ($(CC_USE_CCBUILDER),1)
+LOCAL_SRC_FILES += CCBAnimationManager.cpp \
 CCBFileLoader.cpp \
 CCBKeyframe.cpp \
 CCBReader.cpp \
@@ -27,19 +29,14 @@ CCParticleSystemQuadLoader.cpp \
 CCScale9SpriteLoader.cpp \
 CCScrollViewLoader.cpp \
 CCSpriteLoader.cpp
+endif
 
-LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/.. \
-$(LOCAL_PATH)/../../..
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/..
 
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../2d \
-$(LOCAL_PATH) \
-$(LOCAL_PATH)/../../.. 
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/.. \
+                    $(LOCAL_PATH)/../../2d \
+                    
 
-LOCAL_CFLAGS += -Wno-psabi
-LOCAL_EXPORT_CFLAGS += -Wno-psabi
-
-LOCAL_WHOLE_STATIC_LIBRARIES := cocos_extension_static
+LOCAL_STATIC_LIBRARIES := cocos_extension_static
 
 include $(BUILD_STATIC_LIBRARY)
-
-$(call import-module,extensions)

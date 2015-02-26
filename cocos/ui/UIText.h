@@ -26,6 +26,7 @@ THE SOFTWARE.
 #define __UILABEL_H__
 
 #include "ui/UIWidget.h"
+#include "ui/GUIExport.h"
 
 NS_CC_BEGIN
 
@@ -38,7 +39,7 @@ namespace ui {
  *@js 
  *@lua NA
  */
-class Text : public Widget
+class CC_GUI_DLL Text : public Widget
 {
     
     DECLARE_CLASS_GUI_INFO
@@ -138,7 +139,7 @@ public:
     bool isTouchScaleChangeEnabled()const;
 
     //override "getVirtualRendererSize" method of widget.
-    virtual const Size& getVirtualRendererSize() const override;
+    virtual Size getVirtualRendererSize() const override;
 
     //override "getVirtualRenderer" method of widget.
     virtual Node* getVirtualRenderer() override;
@@ -148,6 +149,13 @@ public:
      */
     virtual std::string getDescription() const override;
 
+    /**
+     * Set the rendering size of the text, you should call this method
+     * along with calling `ignoreContentAdaptWithSize(false)`, otherwise the text area
+     * size is caculated by the real size of the text content
+     * @param size   The text rendering area size
+     *
+     */
     void setTextAreaSize(const Size &size);
 
     const Size& getTextAreaSize()const;
@@ -159,6 +167,29 @@ public:
     void setTextVerticalAlignment(TextVAlignment alignment);
 
     TextVAlignment getTextVerticalAlignment()const;
+    
+    void setTextColor(const Color4B color);
+    
+    const Color4B& getTextColor() const;
+    
+    /**
+     * Enable shadow for the label
+     *
+     * @todo support blur for shadow effect
+     */
+    void enableShadow(const Color4B& shadowColor = Color4B::BLACK,const Size &offset = Size(2,-2), int blurRadius = 0);
+    
+    /**
+     * Enable outline for the label
+     * It only works on IOS and Android when you use System fonts
+     */ 
+    void enableOutline(const Color4B& outlineColor,int outlineSize = 1);
+    
+    /** only support for TTF */
+    void enableGlow(const Color4B& glowColor);
+    
+    /** disable shadow/outline/glow rendering */
+    void disableEffect();
     
 CC_CONSTRUCTOR_ACCESS:
     virtual bool init() override;
@@ -172,11 +203,7 @@ protected:
     virtual void onPressStateChangedToPressed() override;
     virtual void onPressStateChangedToDisabled() override;
     virtual void onSizeChanged() override;
-    virtual void updateTextureColor() override;
-    virtual void updateTextureOpacity() override;
-    virtual void updateTextureRGBA() override;
-    virtual void updateFlippedX() override;
-    virtual void updateFlippedY() override;
+   
     void labelScaleChangedWithSize();
     virtual Widget* createCloneInstance() override;
     virtual void copySpecialProperties(Widget* model) override;

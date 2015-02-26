@@ -26,16 +26,17 @@ THE SOFTWARE.
 #define __UILOADINGBAR_H__
 
 #include "ui/UIWidget.h"
+#include "ui/GUIExport.h"
 
 NS_CC_BEGIN
 
 namespace ui {
-
+    class Scale9Sprite;
 /**
 *   @js NA
 *   @lua NA
 */
-class LoadingBar : public Widget
+class CC_GUI_DLL LoadingBar : public Widget
 {
     
     DECLARE_CLASS_GUI_INFO
@@ -89,7 +90,7 @@ public:
      *
      * @param texture   file name of texture.
      *
-     * @param texType    @see UI_TEX_TYPE_LOCAL
+     * @param texType    @see TextureResType
      */
     void loadTexture(const std::string& texture,TextureResType texType = TextureResType::LOCAL);
     
@@ -129,7 +130,7 @@ public:
     virtual void ignoreContentAdaptWithSize(bool ignore) override;
     
     //override "getVirtualRendererSize" method of widget.
-    virtual const Size& getVirtualRendererSize() const override;
+    virtual Size getVirtualRendererSize() const override;
     
     //override "getVirtualRenderer" method of widget.
     virtual Node* getVirtualRenderer() override;
@@ -141,19 +142,19 @@ public:
 protected:
     virtual void initRenderer() override;
     virtual void onSizeChanged() override;
-    virtual void updateTextureColor() override;
-    virtual void updateTextureOpacity() override;
-    virtual void updateTextureRGBA() override;
+   
     void setScale9Scale();
     void barRendererScaleChangedWithSize();
+    
+    virtual void adaptRenderers() override;
+    
     virtual Widget* createCloneInstance() override;
     virtual void copySpecialProperties(Widget* model) override;
-    virtual void adaptRenderers() override;
 protected:
     Direction _direction;
     float _percent;
     float _totalLength;
-    Node* _barRenderer;
+    Scale9Sprite* _barRenderer;
     TextureResType _renderBarTexType;
     Size _barRendererTextureSize;
     bool _scale9Enabled;

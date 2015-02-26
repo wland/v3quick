@@ -25,11 +25,12 @@
 #ifndef __cocos2d_libs__CCCustomEvent__
 #define __cocos2d_libs__CCCustomEvent__
 
+#include <string>
 #include "base/CCEvent.h"
 
 NS_CC_BEGIN
 
-class EventCustom : public Event
+class CC_DLL EventCustom : public Event
 {
 public:
     /** Constructor */
@@ -41,11 +42,15 @@ public:
     /** Gets user data */
     inline void* getUserData() const { return _userData; };
     
+    inline void setDataString(const std::string& str) { _eventDataString = str; };
+    inline const std::string& getDataString() const { return _eventDataString; };
+    
     /** Gets event name */
     inline const std::string& getEventName() const { return _eventName; };
 protected:
     void* _userData;       ///< User data
     std::string _eventName;
+    std::string _eventDataString;
 };
 
 NS_CC_END

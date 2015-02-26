@@ -27,10 +27,8 @@
 #define __CCEVENT_H__
 
 #include <string>
-#include <stdint.h>
-
 #include "base/CCRef.h"
-#include "base/CCPlatformMacros.h"
+#include "platform/CCPlatformMacros.h"
 
 NS_CC_BEGIN
 
@@ -39,7 +37,7 @@ class Node;
 /**
  *   Base class of all kinds of events.
  */
-class Event : public Ref
+class CC_DLL Event : public Ref
 {
 public:
     enum class Type
@@ -49,10 +47,11 @@ public:
         ACCELERATION,
         MOUSE,
         FOCUS,
+        GAME_CONTROLLER,
         CUSTOM
     };
     
-protected:
+CC_CONSTRUCTOR_ACCESS:
     /** Constructor */
     Event(Type type);
 public:
@@ -75,6 +74,8 @@ public:
      */
     inline Node* getCurrentTarget() { return _currentTarget; };
     
+    std::string getResult() const { return _result; };
+    void setResult(const std::string &result) { _result = result; };
 protected:
     /** Sets current target */
     inline void setCurrentTarget(Node* target) { _currentTarget = target; };
@@ -83,6 +84,7 @@ protected:
     
     bool _isStopped;       ///< whether the event has been stopped.
     Node* _currentTarget;  ///< Current target
+    std::string _result;   ///< Event result
     
     friend class EventDispatcher;
 };

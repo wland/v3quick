@@ -34,7 +34,7 @@ extern "C" {
 #include "base/CCScriptSupport.h"
 #include "CCLuaStack.h"
 #include "CCLuaValue.h"
-#include "LuaScriptHandlerMgr.h"
+#include "cocos2d/LuaScriptHandlerMgr.h"
 
 NS_CC_BEGIN
 
@@ -123,7 +123,7 @@ public:
     virtual int executeAccelerometerEvent(Layer* pLayer, Acceleration* pAccelerationValue);
     virtual int executeEvent(int nHandler, const char* pEventName, Ref* pEventSource = NULL, const char* pEventSourceClassName = NULL);
 
-    virtual bool handleAssert(const char *msg);
+	virtual bool handleAssert(const char *msg, const char *cond, const char *file, int line);
     
     virtual bool parseConfig(ConfigType type, const std::string& str) override;
     virtual int sendEvent(ScriptEvent* message) override;
@@ -149,7 +149,6 @@ private:
     int handleAssetsManagerEvent(ScriptHandlerMgr::HandlerType type,void* data);
     int handleTableViewEvent(ScriptHandlerMgr::HandlerType type,void* data);
     int handleTableViewEvent(ScriptHandlerMgr::HandlerType type,void* data, int numResults, const std::function<void(lua_State*,int)>& func);
-    int handleStudioEventListener(ScriptHandlerMgr::HandlerType type,void* data);
     int handleArmatureWrapper(ScriptHandlerMgr::HandlerType type,void* data);
     int handleEventAcc(void* data);
     int handleEventKeyboard(ScriptHandlerMgr::HandlerType type,void* data);

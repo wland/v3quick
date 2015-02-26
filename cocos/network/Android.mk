@@ -5,25 +5,26 @@ LOCAL_MODULE := cocos_network_static
 
 LOCAL_MODULE_FILENAME := libnetwork
 
-LOCAL_SRC_FILES := HttpClient.cpp \
+LOCAL_SRC_FILES := \
 SocketIO.cpp \
 WebSocket.cpp
 
+ifeq ($(CC_USE_CURL),1)
+LOCAL_SRC_FILES += HttpClient.cpp
+endif
 
-LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/..
 
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../.. \
-$(LOCAL_PATH)/..
+LOCAL_EXPORT_C_INCLUDES :=
 
-LOCAL_CFLAGS += -Wno-psabi
-LOCAL_EXPORT_CFLAGS += -Wno-psabi
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../external/curl/include/android \
+                    $(LOCAL_PATH)/../../external/websockets/include/android
 
-LOCAL_WHOLE_STATIC_LIBRARIES := cocos2dx_static
-LOCAL_WHOLE_STATIC_LIBRARIES += cocos_curl_static
-LOCAL_WHOLE_STATIC_LIBRARIES += libwebsockets_static
+LOCAL_STATIC_LIBRARIES := cocos2dx_internal_static
+
+ifeq ($(CC_USE_CURL),1)
+LOCAL_STATIC_LIBRARIES += cocos_curl_static
+endif
+
+LOCAL_STATIC_LIBRARIES += libwebsockets_static
 
 include $(BUILD_STATIC_LIBRARY)
-
-$(call import-module,.)
-$(call import-module,curl/prebuilt/android)
-$(call import-module,websockets/prebuilt/android)

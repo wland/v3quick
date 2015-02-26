@@ -2,11 +2,14 @@
 --------------------------------
 -- @module EventKeyboard
 -- @extend Event
+-- @parent_module cc
 
 --------------------------------
+-- 
 -- @function [parent=#EventKeyboard] EventKeyboard 
 -- @param self
--- @param #cc.EventKeyboard::KeyCode keycode
--- @param #bool bool
+-- @param #int keyCode
+-- @param #bool isPressed
+-- @return EventKeyboard#EventKeyboard self (return value: cc.EventKeyboard)
         
 return nil

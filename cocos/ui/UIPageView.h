@@ -26,21 +26,21 @@ THE SOFTWARE.
 #define __UIPAGEVIEW_H__
 
 #include "ui/UILayout.h"
-#include "ui/UIScrollInterface.h"
+#include "ui/GUIExport.h"
 
 NS_CC_BEGIN
 
 namespace ui {
 
-CC_DEPRECATED_ATTRIBUTE typedef enum
+typedef enum
 {
     PAGEVIEW_EVENT_TURNING,
 }PageViewEventType;
 
-CC_DEPRECATED_ATTRIBUTE typedef void (Ref::*SEL_PageViewEvent)(Ref*, PageViewEventType);
+typedef void (Ref::*SEL_PageViewEvent)(Ref*, PageViewEventType);
 #define pagevieweventselector(_SELECTOR)(SEL_PageViewEvent)(&_SELECTOR)
 
-class PageView : public Layout
+class CC_GUI_DLL PageView : public Layout
 {
     
     DECLARE_CLASS_GUI_INFO
@@ -128,8 +128,7 @@ public:
      */
     ssize_t getCurPageIndex() const;
     
-    //TODO: add Vector<Layout*> member variables into UIPageView, but it only used for reference purpose,
-    //all the pages are added into proteced node, so does scrollview, listview
+    
     Vector<Layout*>& getPages();
     
     Layout* getPage(ssize_t index);
@@ -137,8 +136,6 @@ public:
     // event
     CC_DEPRECATED_ATTRIBUTE void addEventListenerPageView(Ref *target, SEL_PageViewEvent selector);
     void addEventListener(const ccPageViewCallback& callback);
-    
-
     
     virtual bool onTouchBegan(Touch *touch, Event *unusedEvent) override;
     virtual void onTouchMoved(Touch *touch, Event *unusedEvent) override;
@@ -171,6 +168,23 @@ public:
     virtual std::string getDescription() const override;
 
     virtual void onEnter() override;
+    /**
+     * @brief If you don't specify the value, the pageView will scroll when half pageview width reached
+     */
+    void setCustomScrollThreshold(float threshold);
+    /**
+     *@brief Return user defined scroll page threshold
+     */
+    float getCustomScrollThreshold()const;
+    /**
+     *@brief Set using user defined scroll page threshold or not
+     * If you set it to false, then the default scroll threshold is pageView.width / 2
+     */
+    void setUsingCustomScrollThreshold(bool flag);
+    /**
+     *@brief Query whether we are using user defined scroll page threshold or not
+     */
+    bool isUsingCustomScrollThreshold()const;
 
 CC_CONSTRUCTOR_ACCESS:
     virtual bool init() override;
@@ -189,10 +203,9 @@ protected:
     void updateAllPagesPosition();
     void autoScroll(float dt);
 
-    virtual void handlePressLogic(const Vec2 &touchPoint);
-    virtual void handleMoveLogic(const Vec2 &touchPoint) ;
-    virtual void handleReleaseLogic(const Vec2 &touchPoint) ;
-    virtual void interceptTouchEvent(TouchEventType event, Widget* sender, const Vec2 &touchPoint) ;
+    virtual void handleMoveLogic(Touch *touch) ;
+    virtual void handleReleaseLogic(Touch *touch) ;
+    virtual void interceptTouchEvent(TouchEventType event, Widget* sender,Touch *touch) ;
     
     
     virtual void onSizeChanged() override;
@@ -217,17 +230,16 @@ protected:
     Vector<Layout*> _pages;
 
     TouchDirection _touchMoveDirection;
-
-    float _touchStartLocation;
-    float _touchMoveStartLocation;
-    Vec2 _movePagePoint;
+   
     Widget* _leftBoundaryChild;
     Widget* _rightBoundaryChild;
+    
     float _leftBoundary;
     float _rightBoundary;
-   
-    float _childFocusCancelOffset;
+    float _customScrollThreshold;
+    bool _usingCustomScrollThreshold;
 
+    float _childFocusCancelOffset;
 
     Ref* _pageViewEventListener;
 #if defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1)))
